@@ -1,0 +1,53 @@
+import dotenv from "dotenv";
+import fastify from "fastify";
+import { fastifyCors } from "@fastify/cors";
+import fastifyHelmet from "@fastify/helmet";
+import fastifyRateLimit from "@fastify/rate-limit";
+import routes from "./routes";
+
+dotenv.config();
+
+const server = fastify({
+  logger: {
+    level: "info",
+    transport: {
+      target: "pino-pretty",
+    },
+  },
+  maxParamLength: 150,
+});
+
+const allowedOrigins = ["http://localhost:5173"];
+
+server.register(fastifyCors, {
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    return callback(new Error("Not allowed by CORS"), false);
+  },
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization", "Accept"],
+  credentials: true,
+  preflightContinue: false,
+});
+
+server.register(fastifyHelmet);
+
+server.register(fastifyRateLimit, {
+  max: 100,
+  timeWindow: "1 minute",
+});
+
+server.register(routes);
+
+const start = async () => {
+  try {
+    const PORT = Number(process.env.PORT) || 3001;
+    await server.listen({ port: PORT, host: "0.0.0.0" });
+  } catch (err) {
+    server.log.error(err);
+    process.exit(1);
+  }
+};
+export default start;
