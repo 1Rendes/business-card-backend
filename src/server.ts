@@ -18,7 +18,10 @@ const server = fastify({
   maxParamLength: 150,
 });
 
-const allowedOrigins = ["http://localhost:5173"];
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://business-card-frontend-ecru.vercel.app/",
+];
 server.register(fastifyCors, {
   origin: (origin, callback) => {
     if (!origin || allowedOrigins.includes(origin)) {
