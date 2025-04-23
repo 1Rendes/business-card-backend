@@ -18,17 +18,8 @@ const server = fastify({
   maxParamLength: 150,
 });
 
-const allowedOrigins = [
-  "http://localhost:5173",
-  "https://business-card-frontend-ecru.vercel.app/",
-];
 server.register(fastifyCors, {
-  origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    }
-    return callback(new Error("Not allowed by CORS"), false);
-  },
+  origin: "*",
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization", "Accept"],
   credentials: true,
