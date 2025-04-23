@@ -3,7 +3,8 @@ import fastify from "fastify";
 import { fastifyCors } from "@fastify/cors";
 import fastifyHelmet from "@fastify/helmet";
 import fastifyRateLimit from "@fastify/rate-limit";
-import routes from "./routes";
+import fastifyMultipart from "@fastify/multipart";
+import routes from "./routes/index.js";
 
 dotenv.config();
 
@@ -18,7 +19,6 @@ const server = fastify({
 });
 
 const allowedOrigins = ["http://localhost:5173"];
-
 server.register(fastifyCors, {
   origin: (origin, callback) => {
     if (!origin || allowedOrigins.includes(origin)) {
@@ -33,7 +33,7 @@ server.register(fastifyCors, {
 });
 
 server.register(fastifyHelmet);
-
+server.register(fastifyMultipart);
 server.register(fastifyRateLimit, {
   max: 100,
   timeWindow: "1 minute",
