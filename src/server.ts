@@ -4,6 +4,7 @@ import { fastifyCors } from "@fastify/cors";
 import fastifyHelmet from "@fastify/helmet";
 import fastifyRateLimit from "@fastify/rate-limit";
 import fastifyMultipart from "@fastify/multipart";
+import fastifyWebsocket from "@fastify/websocket";
 import routes from "./routes/index.js";
 
 dotenv.config();
@@ -26,6 +27,7 @@ server.register(fastifyCors, {
   preflightContinue: false,
 });
 
+server.register(fastifyWebsocket);
 server.register(fastifyHelmet);
 server.register(fastifyMultipart);
 server.register(fastifyRateLimit, {

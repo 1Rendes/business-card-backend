@@ -56,12 +56,12 @@ async function pdfUploader() {
     });
     loaders.map(async (loader) => {
       const doc = await loader.load();
-      const splitter = new RecursiveCharacterTextSplitter({
-        chunkSize: 1000,
-        chunkOverlap: 50,
-      });
-      const splittedDoc = await splitter.createDocuments([doc[0].pageContent]);
-      await vectorStore.addDocuments(splittedDoc);
+      // const splitter = new RecursiveCharacterTextSplitter({
+      //   chunkSize: 1000,
+      //   chunkOverlap: 50,
+      // });
+      // const splittedDoc = await splitter.createDocuments([doc[0].pageContent]);
+      await vectorStore.addDocuments(doc);
     });
   } catch (error) {
     console.error("Error reading directory:", error);
