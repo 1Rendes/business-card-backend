@@ -23,7 +23,7 @@ export async function langchainInit(
     model: "gpt-4o",
     temperature: 0.7,
     maxTokens: 1024,
-    verbose: true,
+    verbose: false,
   });
 
   const embeddings = new OpenAIEmbeddings({
@@ -65,7 +65,6 @@ export async function langchainInit(
   const writeConfig = {
     configurable: {
       thread_id: { chatName, userId, chatId },
-      checkpoint_ns: "",
     },
   };
   const readConfig = {

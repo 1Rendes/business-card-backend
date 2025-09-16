@@ -1,5 +1,5 @@
-import { log } from "console";
 import { langchainInit } from "../services/langchainService.js";
+import { initialReplyText } from "../locales/translation.js";
 
 async function webSocket(fastify: {
   get: (
@@ -16,17 +16,21 @@ async function webSocket(fastify: {
       websocket: true,
     },
     async (socket, req) => {
-      const chatName = req.query.chatName || "";
-      const userId = req.query.userId;
-      const chatId = req.query.chatId;
+      const language = req.query.language;
       const { agentExecutor, readConfig, checkpointer, writeConfig } =
-        await langchainInit(chatName, userId, chatId);
+        await langchainInit();
       socket.on("message", async (message: string) => {
         const tuple = await checkpointer.getTuple(writeConfig);
         const parsedMessage = message.toString();
         const replyMessage = await agentExecutor.invoke(
           {
-            messages: [{ role: "user", content: parsedMessage }],
+            messages: [
+              {
+                role: "system",
+                content: `User system's language is ${language}.`,
+              },
+              { role: "user", content: parsedMessage },
+            ],
           },
           readConfig
         );
@@ -43,9 +47,10 @@ async function webSocket(fastify: {
           );
         socket.send(JSON.stringify(reply));
       });
+      const content =
+        initialReplyText[language as keyof typeof initialReplyText];
       const initialReply = {
-        content:
-          "Welcome! I'm Volodymyr's assistant. Ask me anything about his projects.",
+        content: content,
         type: "assistant",
       };
       socket.send(JSON.stringify(initialReply));
