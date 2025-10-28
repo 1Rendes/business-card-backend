@@ -4,6 +4,7 @@ import uploadFiles from "./pinecone/uploadFiles.js";
 import uploadUrl from "./pinecone/uploadUrl.js";
 import ping from "./ping.js";
 import websocket from "./websocket.js";
+import feedback from "./feedback.js";
 
 export default async function routes(fastify: FastifyInstance) {
   fastify.register(getLivekitToken);
@@ -11,4 +12,5 @@ export default async function routes(fastify: FastifyInstance) {
   fastify.register(uploadUrl);
   fastify.register(ping);
   fastify.register(websocket);
+  fastify.register(feedback);
 }
