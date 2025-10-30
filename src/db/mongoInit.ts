@@ -7,7 +7,7 @@ export const initMongoConnection = async () => {
     const db = process.env.MONGODB_DB;
     console.log("Mongo connection successfully established!");
     return new MongoClient(
-      `mongodb+srv://${user}:${pwd}@${url}/${db}?retryWrites=true&w=majority&appName=MainDB`
+      `mongodb+srv://${user}:${pwd}@${url}/${db}`
     );
   } catch (e) {
     console.log("Error while setting up mongo connection", e);

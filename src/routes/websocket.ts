@@ -1,5 +1,6 @@
 import { langchainInit } from "../services/langchainService.js";
 import { initialReplyText } from "../locales/translation.js";
+import { systemInstructions } from "../context/systemInstructions.js";
 
 async function webSocket(fastify: {
   get: (
@@ -29,6 +30,7 @@ async function webSocket(fastify: {
                 role: "system",
                 content: `User system's language is ${language}.`,
               },
+              {role: "system", content: systemInstructions},
               { role: "user", content: parsedMessage },
             ],
           },
