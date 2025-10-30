@@ -1,5 +1,5 @@
 import { FastifyRequest, FastifyReply } from "fastify";
-import { sendFeedbackEmail } from "../services/emailService.js";
+import sendFeedbackEmail from "../services/emailService.js";
 
 type FeedbackBody = {
   email: string;
