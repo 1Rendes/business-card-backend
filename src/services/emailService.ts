@@ -1,37 +1,30 @@
-import nodemailer, { Transporter } from "nodemailer";
+import { TransactionalEmailsApi, SendSmtpEmail, TransactionalEmailsApiApiKeys } from "@getbrevo/brevo"
+const SUBJECT_TEXT: string = "новое сообщение с визитки";
 
-const createTransporter = (): Transporter => {
-  return nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASSWORD,
-    },
-  });
-};
-
-export async function sendFeedbackEmail(
+export default async function sendFeedbackEmail(
   fromEmail: string,
   comment: string
 ): Promise<void> {
-  const recipientEmail: string = process.env.EMAIL_RECEPIENT || "";
-  if (!recipientEmail) {
-    throw new Error("EMAIL_RECEPIENT не настроен");
-  }
-  const transporter: Transporter = createTransporter();
-  const mailOptions = {
-    from: process.env.EMAIL_USER,
-    to: recipientEmail,
-    subject: "новое сообщение с визитки",
-    text: `Email отправителя: ${fromEmail}\n\nСообщение:\n${comment}`,
-    html: `
-      <div>
-        <p><strong>Email отправителя:</strong> ${fromEmail}</p>
-        <p><strong>Сообщение:</strong></p>
-        <p>${comment.replace(/\n/g, "<br>")}</p>
-      </div>
-    `,
+  const apiKey: string | undefined = process.env.BREVO_API_KEY;
+  const senderEmail: string | undefined = process.env.EMAIL_SENDER;
+  const recipientEmail: string | undefined = process.env.EMAIL_RECEPIENT;
+  if (!apiKey) throw new Error("BREVO_API_KEY не настроен");
+  if (!senderEmail) throw new Error("EMAIL_SENDER не настроен");
+  if (!recipientEmail) throw new Error("EMAIL_RECEPIENT не настроен");
+  const emailAPI = new TransactionalEmailsApi();
+  emailAPI.setApiKey(TransactionalEmailsApiApiKeys.apiKey, apiKey);
+  const sender: { email: string; name?: string } = { email: senderEmail, name: "Business Card" };
+  const to: Array<{ email: string }> = [{ email: recipientEmail }];
+  const textContent: string = `Email отправителя: ${fromEmail}\n\nСообщение:\n${comment}`;
+  const htmlContent: string = `<div><p><strong>Email отправителя:</strong> ${fromEmail}</p><p><strong>Сообщение:</strong></p><p>${comment.replace(/\n/g, "<br>")}</p></div>`;
+  const email: SendSmtpEmail = {
+    sender,
+    to,
+    replyTo: { email: fromEmail },
+    subject: SUBJECT_TEXT,
+    textContent,
+    htmlContent,
   };
-  await transporter.sendMail(mailOptions);
+  const response = await emailAPI.sendTransacEmail(email);
+  console.log(response);
 }
-
