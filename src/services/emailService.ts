@@ -26,5 +26,4 @@ export default async function sendFeedbackEmail(
     htmlContent,
   };
   const response = await emailAPI.sendTransacEmail(email);
-  console.log(response);
 }
