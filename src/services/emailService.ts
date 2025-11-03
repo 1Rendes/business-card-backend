@@ -4,7 +4,7 @@ const SUBJECT_TEXT: string = "новое сообщение с визитки";
 export default async function sendFeedbackEmail(
   fromEmail: string,
   comment: string
-): Promise<void> {
+): Promise<string> {
   const apiKey: string | undefined = process.env.BREVO_API_KEY;
   const senderEmail: string | undefined = process.env.EMAIL_SENDER;
   const recipientEmail: string | undefined = process.env.EMAIL_RECEPIENT;
@@ -26,4 +26,5 @@ export default async function sendFeedbackEmail(
     htmlContent,
   };
   const response = await emailAPI.sendTransacEmail(email);
+  return "Message sent successfully";
 }

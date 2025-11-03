@@ -11,6 +11,7 @@ import { createReactAgent } from "@langchain/langgraph/prebuilt";
 import { MongoDBSaver } from "@langchain/langgraph-checkpoint-mongodb";
 import * as dotenv from "dotenv";
 import { mongoClient } from "../index.js";
+import { sendEmailTool } from "./toolsDescription.js";
 
 dotenv.config();
 
@@ -60,7 +61,7 @@ export async function langchainInit(
     name: "documents_retriever",
     description: "Searches and returns documents about Volodymyr's projects.",
   });
-  const tools = [retrieverTool];
+  const tools = [retrieverTool, sendEmailTool];
 
   const writeConfig = {
     configurable: {
