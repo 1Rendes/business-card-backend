@@ -23,6 +23,8 @@ async function webSocket(fastify: {
       socket.on("message", async (message: string) => {
         const tuple = await checkpointer.getTuple(writeConfig);
         const parsedMessage = message.toString();
+        const initialMessage =
+          initialReplyText[language as keyof typeof initialReplyText];
         const replyMessage = await agentExecutor.invoke(
           {
             messages: [
@@ -30,7 +32,8 @@ async function webSocket(fastify: {
                 role: "system",
                 content: `User system's language is ${language}.`,
               },
-              {role: "system", content: systemInstructions},
+              { role: "system", content: systemInstructions },
+              { role: "assistant", content: initialMessage },
               { role: "user", content: parsedMessage },
             ],
           },

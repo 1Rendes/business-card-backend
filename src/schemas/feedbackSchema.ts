@@ -8,6 +8,7 @@ export const feedbackSchema = {
     properties: {
       email: { type: "string", format: "email" },
       comment: { type: "string" },
+      name: { type: "string" },
     },
     required: ["email", "comment"],
   },
