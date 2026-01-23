@@ -29,7 +29,7 @@ async function docUploader() {
     const files = await fs.readdir(TEMP_UPLOAD_DIR);
     files.map((file) => {
       const pathToFile = path.join(TEMP_UPLOAD_DIR, file);
-      loaders.push(new DocxLoader(pathToFile, { type: "doc" }));
+      loaders.push(new DocxLoader(pathToFile, { type: "docx" }));
     });
     loaders.map(async (loader) => {
       const doc = await loader.load();
@@ -94,7 +94,7 @@ async function scrapPage(url: string) {
 
 async function mainUploader(fileType: string, url: string | null) {
   switch (fileType) {
-    case "doc":
+    case "docx":
       await docUploader();
       break;
     case "pdf":
@@ -104,7 +104,7 @@ async function mainUploader(fileType: string, url: string | null) {
       if (url) await urlUploader(url);
       break;
     default:
-      break;
+      return "not supported format";
   }
   console.log(`Data added sucessfully.`);
 }

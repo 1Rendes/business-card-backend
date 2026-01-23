@@ -22,7 +22,7 @@ export default async function uploaderController(
   if (!files || files.length === 0) {
     return reply.status(400).send({ message: "No files uploaded" });
   }
-  const fileType = path.extname(files[0].originalname).slice(1);
+  const fileType = path.extname(files[0].originalname).slice(1); 
   const fileNamesWitPaths = files.map((file: { filename: string }) =>
     path.join(TEMP_UPLOAD_DIR, file.filename)
   );
